@@ -1,5 +1,5 @@
 {
-    "prefix": "@stock",
+    "prefix": "+-",
     "token": "INSERT-YOUR-BOT-TOKEN-HERE",
     "key": "INSERT-YOUR-ALPHAVANTAGE-API-KEY-HERE"
 }
