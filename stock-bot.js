@@ -52,20 +52,18 @@ client.on("message", message => {
 
     // Take the user input and break it into an array by space-separated chunks
     // The chunks can be separated by more than 1 space, just in case
-    // The command should come in with the form: prefix stock-chosen command-chosen date-time-chosen
+    // The command should come in with the form: [prefix][stock-chosen] [command-chosen] [date-time-chosen]
     const args = message.content.split(/ +/);
-    // Remove the prefix (the first array item) from the arguments array
-    args.shift();
 
-    // Remove the second item (the stock-chosen) and store it in its own variable
-    const stock = args.shift().toUpperCase();
+    // Remove the first item (the stock-chosen), detach the prefix from it, and store it in its own variable
+    const stock = args.shift().replace(prefix, "").toUpperCase();
     // If the user actually sent a help command, and wasn't actually requesting a stock
     if (stock === "HELP") {
-        return message.channel.send(`To use the stock bot, all requests must be sent in the form:\n*prefix stock-chosen command-chosen date-time-chosen*\n\nThe current prefix is ${prefix}\nAfter the prefix comes the stock code: for example, Microsoft would be MSFT, and Tesla would be TSLA. Capitals not necessary.\nThen comes the command. Here, you have 3 choices: t for time, d for day, and m for month.\n\nThe last part, the date-time-chosen, depends on the command.\nIf you chose the time command, then enter a time in hh:mm format, and the stock value at that time on the most recent day will be returned.\nIf you chose the date command, enter a date in yyyy-mm-dd format.\nIf you chose the month command, enter a month in the yyyy-mm format.\n**Shortcut: Entering a time value as "now" will return the latest minute / day / month data.**\n\nFor any command, the data returned is as follows:\n**Open:** The stock value at the start of the minute / day / month\n**Close:** The stock value at the end of the minute / day / month\n**Difference:** The change from start to close\n**High / Low**: The peak and valley of the mintue / day / month\n**Range:** The distance from the high to the low\n**Volume:** The amount of stocks traded during the minute / day / month\n**Change:** The change, in USD and %, of the stock price from the previous close\n\nNote that this bot cannot retrive after-hours data. If the requested date or time is unavailable, it is because the market was closed. Remember that the market closes on weekends.\nIt could also be that the requested data is too far back. Anything over 20 years back is not stored.`);
+        return message.channel.send(`To use the stock bot, all requests must be sent in the form:\n*[prefix][stock-chosen] [command-chosen] [date-time-chosen]*\n\nThe current prefix is ${prefix}\nAfter the prefix comes the stock code: for example, Microsoft would be MSFT, and Tesla would be TSLA. Capitals not necessary.\nThen comes the command. Here, you have 3 choices: t for time, d for day, and m for month.\n\nThe last part, the date-time-chosen, depends on the command.\nIf you chose the time command, then enter a time in hh:mm format, and the stock value at that time on the most recent day will be returned.\nIf you chose the date command, enter a date in yyyy-mm-dd format.\nIf you chose the month command, enter a month in the yyyy-mm format.\n**Shortcut: Entering a time value as "now" will return the latest minute / day / month data.**\n\nFor any command, the data returned is as follows:\n**Open:** The stock value at the start of the minute / day / month\n**Close:** The stock value at the end of the minute / day / month\n**Difference:** The change from start to close\n**High / Low**: The peak and valley of the mintue / day / month\n**Range:** The distance from the high to the low\n**Volume:** The amount of stocks traded during the minute / day / month\n**Change:** The change, in USD and %, of the stock price from the previous close\n\nNote that this bot cannot retrive after-hours data. If the requested date or time is unavailable, it is because the market was closed. Remember that the market closes on weekends.\nIt could also be that the requested data is too far back. Anything over 20 years back is not stored.`);
     }
 
     // If there are under 2 arguments left, and it the user was not requesting help, that means 1 or more commands are missing
-    // There should be 4 arguments to begin with, but .shift() has already removed 2
+    // There should be 3 arguments to begin with, but .shift() has already removed 1
     if (args.length < 2) return message.channel.send("Missing command(s).");
     // Remove the command and store it
     const command = args.shift().toLowerCase();
